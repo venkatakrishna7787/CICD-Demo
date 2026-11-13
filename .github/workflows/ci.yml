@@ -1,4 +1,4 @@
-name: React Native CI
+name: React Native CI/CD
 
 on:
   push:
@@ -14,21 +14,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Download repository code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Configure Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Run ESLint
       - name: Run lint
         run: npm run lint
+
+      - name: TypeScript check
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test -- --runInBand
+
+  android-build:
+    name: Build Android APK
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Android APK using EAS
+        run: npx eas-cli build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
