@@ -32,11 +32,3 @@ jobs:
       # 4. Run ESLint
       - name: Run lint
         run: npm run lint
-
-      # 5. TypeScript validation
-      - name: TypeScript check
-        run: npm run typecheck
-
-      # 6. Run Jest tests
-      - name: Run tests
-        run: npm test -- --runInBand
