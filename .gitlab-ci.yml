@@ -1,0 +1,26 @@
+image: node:22-bookworm
+
+stages:
+  - verify
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
+validate:
+  stage: verify
+
+  script:
+    - npm ci
+    - npm run lint
+    - npm run typecheck
+
+  only:
+    - branches
+    - merge_requests
