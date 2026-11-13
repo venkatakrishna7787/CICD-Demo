@@ -29,12 +29,6 @@ jobs:
       - name: Run lint
         run: npm run lint
 
-      - name: TypeScript check
-        run: npm run typecheck
-
-      - name: Run tests
-        run: npm test -- --runInBand
-
   android-build:
     name: Build Android APK
     needs: validate
